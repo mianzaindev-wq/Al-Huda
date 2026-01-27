@@ -1,35 +1,36 @@
 # Virtual Environment
 venv/
 env/
-
-# Sensitive Files
-.env
-API.txt
-data.txt
-*.pkl
-vector_db.pkl
+__pycache__/
+*.pyc
 
 # Logs
 *.log
 app.log
+logs/
 
-# Python cache
-__pycache__/
-*.pyc
+# Database and Large Files
+vector_db.pkl
+*.rar
+*.zip
+*.db
+*.sqlite
+DataBase.rar
+# We keep PDFs if they are reasonable size, but user has DataBase.rar which is 90MB.
+# We will ignore the rar but keep the folder logic? User wants "perfectly post this Folder".
+# Detailed ignore:
+DataBase/DataBase.rar
+# Ignore the large vector db specific pkl
+vector_db/
 
 # IDE
 .vscode/
 .idea/
 
-# Uploads
-uploads/*
-!uploads/.gitkeep
+# Environment variables
+.env
 
-# OS Files
-.DS_Store
-Thumbs.db
-
-# Database (if you have any)
-*.db
-*.sqlite
-*.sqlite3
+# Text/Tmp
+requirements.txt.txt
+API.txt
+_unused_scripts/

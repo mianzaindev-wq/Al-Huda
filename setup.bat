@@ -367,6 +367,7 @@ echo [INFO] Creating run.bat launcher...
     echo call venv\Scripts\activate
     echo.
     echo :: Run the server
+    echo cd app
     echo python main.py
     echo.
     echo pause
@@ -408,6 +409,7 @@ echo.
 echo ========================================================================
 echo.
 
+cd app
 python main.py
 
 pause
