@@ -229,27 +229,11 @@ echo.
 if not exist ".env" (
     echo [INFO] Creating .env configuration file...
     (
-        echo # Islamic AI Assistant Configuration
+        echo # Al-Huda Islamic AI Assistant Configuration
         echo.
-        echo # REQUIRED: Gemini API Key
-        echo # Get your key from: https://aistudio.google.com/apikey
-        echo GEMINI_API_KEY=your_api_key_here
-        echo.
-        echo # Model Configuration
-        echo MODEL_NAME=gemini-2.0-flash-exp
-        echo VISION_MODEL=gemini-2.0-flash-exp
-        echo MAX_TOKENS=2048
-        echo TEMPERATURE=0.7
-        echo.
-        echo # Vector Database Settings
-        echo EMBEDDING_MODEL=all-MiniLM-L6-v2
-        echo VECTOR_DB_PATH=vector_db
-        echo TOP_K_RESULTS=5
-        echo CHUNK_SIZE=500
-        echo CHUNK_OVERLAP=100
-        echo.
-        echo # Chat Configuration
-        echo CHAT_MEMORY_LIMIT=20
+        echo # REQUIRED: Mistral AI API Key
+        echo # Get your key from: https://console.mistral.ai/
+        echo MISTRAL_API_KEY=your_mistral_api_key_here
     ) > .env
     echo [SUCCESS] .env file created
     echo.
@@ -259,23 +243,23 @@ if not exist ".env" (
 )
 
 :: Check if API key is configured
-findstr /C:"your_api_key_here" .env >nul 2>&1
-if errorlevel 0 (
-    echo [WARNING] Gemini API key not configured!
+findstr /C:"your_mistral_api_key_here" .env >nul 2>&1
+if not errorlevel 1 (
+    echo [WARNING] Mistral API key not configured!
     echo.
     echo -----------------------------------------------------------------------
-    echo  IMPORTANT: You need to add your Gemini API key to continue!
+    echo  IMPORTANT: You need to add your Mistral API key to continue!
     echo -----------------------------------------------------------------------
     echo.
-    echo  1. Visit: https://aistudio.google.com/apikey
-    echo  2. Sign in with your Google account
-    echo  3. Click "Create API Key"
+    echo  1. Visit: https://console.mistral.ai/
+    echo  2. Sign in or create a free account
+    echo  3. Go to API Keys and click "Create new key"
     echo  4. Copy the API key
     echo  5. Open .env file in this folder
-    echo  6. Replace "your_api_key_here" with your actual key
+    echo  6. Replace "your_mistral_api_key_here" with your actual key
     echo.
     echo  Example:
-    echo  GEMINI_API_KEY=AIzaSyC8xYzAbc123_your_actual_key_here
+    echo  MISTRAL_API_KEY=sk-abc123_your_actual_key_here
     echo.
     echo -----------------------------------------------------------------------
     echo.
@@ -331,12 +315,13 @@ echo ========================================================================
 echo.
 echo 1. Configure API Key (if not done):
 echo    - Open .env file
-echo    - Add your Gemini API key
-echo    - Get key from: https://aistudio.google.com/apikey
+echo    - Add your Mistral API key
+echo    - Get key from: https://console.mistral.ai/
 echo.
 echo 2. Run the application:
 echo    - Double-click: run.bat
-echo    - Or in CMD: call venv\Scripts\activate ^&^& python main.py
+echo    - Or in PowerShell (from project root):
+echo      .\venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 echo.
 echo 3. Access the application:
 echo    - Web Interface: http://127.0.0.1:8000
@@ -354,27 +339,30 @@ echo.
 echo ========================================================================
 echo.
 
+:: Check if run.bat was already generated
+if exist "run.bat" (
+    echo [INFO] run.bat already exists — skipping regeneration
+    echo.
+    goto :start_server
+)
+
 :: Create run.bat for easy server startup
 echo [INFO] Creating run.bat launcher...
 (
     echo @echo off
-    echo :: Quick launcher for Islamic AI Assistant
+    echo :: Al-Huda Islamic AI Assistant - Launcher
     echo.
-    echo echo Starting Islamic AI Assistant...
-    echo echo.
+    echo if not exist "venv\Scripts\python.exe" ^
+    echo     echo [ERROR] venv not found. Run setup.bat first. ^& pause ^& exit /b 1
     echo.
-    echo :: Activate virtual environment
-    echo call venv\Scripts\activate
-    echo.
-    echo :: Run the server
-    echo cd app
-    echo python main.py
-    echo.
+    echo start /b cmd /c "timeout /t 4 /nobreak ^>nul ^&^& start http://127.0.0.1:8000"
+    echo venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
     echo pause
 ) > run.bat
 echo [SUCCESS] run.bat created
 echo.
 
+:start_server
 :: Ask if user wants to start the server now
 choice /C YN /M "Would you like to start the server now?"
 if errorlevel 2 (
@@ -385,31 +373,21 @@ if errorlevel 2 (
     exit /b 0
 )
 
-:: Check if main.py exists
-if not exist "main.py" (
-    echo.
-    echo [ERROR] main.py not found!
-    echo Please make sure main.py is in the same folder as this setup script.
-    echo.
-    pause
-    exit /b 1
-)
-
-:: Start the server
+:: Start the server from project root
 echo.
 echo ========================================================================
 echo                      STARTING SERVER
 echo ========================================================================
 echo.
 echo Server will start at: http://127.0.0.1:8000
-echo API Documentation: http://127.0.0.1:8000/docs
+echo API Documentation:    http://127.0.0.1:8000/docs
 echo.
 echo Press Ctrl+C to stop the server
 echo.
 echo ========================================================================
 echo.
 
-cd app
-python main.py
+start /b cmd /c "timeout /t 4 /nobreak >nul && start http://127.0.0.1:8000"
+venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 pause

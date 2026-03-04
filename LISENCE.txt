@@ -1,0 +1,50 @@
+Al-Huda Islamic AI Assistant
+Copyright (c) 2026 Zain Wyne. All rights reserved.
+
+PROPRIETARY LICENSE — EDUCATIONAL USE ONLY
+
+This software and all associated source code, documentation, assets, and
+data files (collectively, the "Software") are the exclusive intellectual
+property of Zain Wyne ("the Owner").
+
+PERMISSIONS
+-----------
+You are permitted to:
+  * View, study, and learn from the source code for personal educational purposes.
+  * Fork this repository on GitHub for private, non-commercial study only.
+
+RESTRICTIONS
+------------
+You are expressly prohibited from:
+  1. Using, copying, modifying, merging, publishing, distributing, sublicensing,
+     or selling copies of the Software, in whole or in part, for any commercial
+     purpose — including but not limited to incorporating it into a product or
+     service that generates revenue.
+  2. Deploying the Software (or any derivative) as a publicly accessible service
+     without the Owner's prior written consent.
+  3. Removing or altering this license notice, copyright header, or any other
+     proprietary markings from any copy of the Software.
+  4. Claiming ownership of any part of the Software.
+  5. Using the Software's name, branding, or logo in any way that implies
+     endorsement or affiliation without the Owner's prior written consent.
+
+OWNERSHIP
+---------
+The Owner retains full and exclusive ownership of all intellectual property
+rights in and to the Software, including all modifications, enhancements,
+and derivative works, regardless of who contributed to them.
+
+NO WARRANTIES
+-------------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL
+THE OWNER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+CONTACT
+-------
+For licensing inquiries, collaboration requests, or to request permission
+beyond the scope of this license, please contact the Owner via the GitHub
+repository associated with this project.

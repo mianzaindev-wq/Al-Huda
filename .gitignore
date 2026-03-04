@@ -1,36 +1,86 @@
+# =============================================================================
+# Al-Huda — Islamic AI Assistant
+# .gitignore
+# =============================================================================
+
 # Virtual Environment
 venv/
 env/
+.venv/
+
+# Python bytecode
 __pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 *.pyc
 
+# =============================================================================
+# Sensitive / Secret Files
+# =============================================================================
+.env
+API.txt
+
+# =============================================================================
+# Large Generated Files
+# =============================================================================
+
+# Persisted vector database (~500 MB — regenerated on first run)
+vector_db.pkl
+vector_db/
+
+# Compressed archives
+*.rar
+*.zip
+*.tar.gz
+*.7z
+
+# =============================================================================
+# User-Uploaded Content
+# =============================================================================
+
+# Profile avatar images (generated at runtime, not source code)
+uploads/profiles/*.jpg
+uploads/profiles/*.jpeg
+uploads/profiles/*.png
+uploads/profiles/*.gif
+uploads/profiles/*.webp
+
+# =============================================================================
+# DataBase Source Files
+# =============================================================================
+
+# PDFs are large — keep them out of the repo
+# (reference them via DataBase/README or store them with Git LFS if needed)
+DataBase/*.pdf
+DataBase/*.rar
+
+# =============================================================================
 # Logs
+# =============================================================================
 *.log
 app.log
 logs/
 
-# Database and Large Files
-vector_db.pkl
-*.rar
-*.zip
-*.db
-*.sqlite
-DataBase.rar
-# We keep PDFs if they are reasonable size, but user has DataBase.rar which is 90MB.
-# We will ignore the rar but keep the folder logic? User wants "perfectly post this Folder".
-# Detailed ignore:
-DataBase/DataBase.rar
-# Ignore the large vector db specific pkl
-vector_db/
-
-# IDE
+# =============================================================================
+# IDE / Editor
+# =============================================================================
 .vscode/
 .idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
 
-# Environment variables
-.env
-
-# Text/Tmp
-requirements.txt.txt
-API.txt
+# =============================================================================
+# Misc Dev Artifacts
+# =============================================================================
 _unused_scripts/
+requirements.txt.txt
+
+# Stale root-level profiles directory (app writes to uploads/profiles/ instead)
+profiles/
+
+# Sample/scratch data files
+data.txt
