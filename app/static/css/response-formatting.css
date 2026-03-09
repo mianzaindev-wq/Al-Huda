@@ -1,0 +1,613 @@
+/**
+ * Al-Huda Response Formatting - Premium Enhancement
+ * Version 3.0 - Advanced Message Presentation
+ */
+
+/* ============================================================================
+   RESPONSE CONTAINER & STRUCTURE
+   ============================================================================ */
+
+.message-response-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 100%;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+.message-response-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.04));
+    border-left: 4px solid #059669;
+    border-radius: 8px 12px 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #059669;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dark .message-response-header {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+    border-left-color: #34d399;
+    color: #34d399;
+}
+
+.message-response-header .material-symbols-outlined {
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* ============================================================================
+   KEY CONCEPTS & HIGHLIGHTS
+   ============================================================================ */
+
+.key-concept {
+    display: inline-block;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(16, 185, 129, 0.1));
+    border-radius: 6px;
+    border: 1px solid rgba(5, 150, 105, 0.2);
+    color: #059669;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+}
+
+.dark .key-concept {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.12));
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #34d399;
+}
+
+.key-concept:hover {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.25), rgba(16, 185, 129, 0.15));
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+    transform: translateY(-1px);
+}
+
+/* ============================================================================
+   CALLOUT BOXES - For Important Information
+   ============================================================================ */
+
+.callout-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.05));
+    border-left: 4px solid #3b82f6;
+    border-radius: 0 8px 8px 0;
+    padding: 16px 18px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #1e293b;
+}
+
+.dark .callout-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(37, 99, 235, 0.06));
+    color: #cbd5e1;
+}
+
+.callout-success {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(34, 197, 94, 0.04));
+    border-left: 4px solid #22c55e;
+    color: #1e293b;
+}
+
+.dark .callout-success {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(34, 197, 94, 0.06));
+    color: #cbd5e1;
+}
+
+.callout-warning {
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.08), rgba(249, 115, 22, 0.05));
+    border-left: 4px solid #f97316;
+    color: #1e293b;
+}
+
+.dark .callout-warning {
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.12), rgba(249, 115, 22, 0.06));
+    color: #cbd5e1;
+}
+
+.callout-concept {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(124, 58, 237, 0.05));
+    border-left: 4px solid #a855f7;
+    color: #1e293b;
+}
+
+.dark .callout-concept {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(124, 58, 237, 0.06));
+    color: #cbd5e1;
+}
+
+.callout-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: inherit;
+}
+
+.callout-icon .material-symbols-outlined {
+    font-size: 18px;
+}
+
+/* ============================================================================
+   KEY TAKEAWAY BOX
+   ============================================================================ */
+
+.key-takeaway {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.05));
+    border: 2px solid rgba(5, 150, 105, 0.25);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 24px 0;
+    position: relative;
+}
+
+.dark .key-takeaway {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.key-takeaway::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #059669, #10b981, #34d399);
+    border-radius: 12px 12px 0 0;
+}
+
+.key-takeaway-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #059669;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dark .key-takeaway-title {
+    color: #34d399;
+}
+
+.key-takeaway-title .material-symbols-outlined {
+    font-size: 22px;
+}
+
+.key-takeaway-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #334155;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dark .key-takeaway-content {
+    color: #cbd5e1;
+}
+
+.key-takeaway-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.key-takeaway-item::before {
+    content: '✓';
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #10b981;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+/* ============================================================================
+   SIDE NOTE / SUPPLEMENTARY INFO
+   ============================================================================ */
+
+.side-note {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.08), rgba(148, 163, 184, 0.05));
+    border-left: 3px solid #94a3b8;
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+    font-style: italic;
+}
+
+.dark .side-note {
+    background: linear-gradient(135deg, rgba(71, 85, 105, 0.1), rgba(71, 85, 105, 0.05));
+    border-left-color: #64748b;
+    color: #cbd5e1;
+}
+
+/* ============================================================================
+   DEFINITION BOX
+   ============================================================================ */
+
+.definition-box {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.04), rgba(16, 185, 129, 0.02));
+    border: 1px solid rgba(5, 150, 105, 0.15);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.dark .definition-box {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(16, 185, 129, 0.03));
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.definition-term {
+    font-weight: 700;
+    color: #059669;
+    display: block;
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+.dark .definition-term {
+    color: #34d399;
+}
+
+.definition-text {
+    color: #475569;
+}
+
+.dark .definition-text {
+    color: #cbd5e1;
+}
+
+/* ============================================================================
+   COMPARISON TABLE ENHANCEMENT
+   ============================================================================ */
+
+.comparison-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.comparison-item {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.04));
+    border: 1px solid rgba(5, 150, 105, 0.15);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 0.3s ease;
+}
+
+.dark .comparison-item {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+.comparison-item:hover {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.12), rgba(16, 185, 129, 0.08));
+    border-color: rgba(5, 150, 105, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.12);
+}
+
+.dark .comparison-item:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.1));
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.comparison-label {
+    font-weight: 700;
+    font-size: 12px;
+    color: #059669;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.dark .comparison-label {
+    color: #34d399;
+}
+
+.comparison-value {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #334155;
+}
+
+.dark .comparison-value {
+    color: #cbd5e1;
+}
+
+/* ============================================================================
+   STEP-BY-STEP / PROCESS
+   ============================================================================ */
+
+.process-step {
+    display: flex;
+    gap: 16px;
+    margin: 16px 0;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.05), rgba(16, 185, 129, 0.02));
+    border-left: 3px solid #10b981;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.2s ease;
+}
+
+.dark .process-step {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.04));
+    border-left-color: #34d399;
+}
+
+.process-step:hover {
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.04));
+    transform: translateX(4px);
+}
+
+.process-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.process-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.process-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #059669;
+}
+
+.dark .process-title {
+    color: #34d399;
+}
+
+.process-description {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.dark .process-description {
+    color: #cbd5e1;
+}
+
+/* ============================================================================
+   QUOTE / INSPIRATION BOX
+   ============================================================================ */
+
+.inspiration-quote {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(139, 92, 246, 0.05));
+    border-left: 4px solid #a855f7;
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #334155;
+    position: relative;
+}
+
+.dark .inspiration-quote {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(139, 92, 246, 0.08));
+    color: #cbd5e1;
+}
+
+.inspiration-quote::before {
+    content: '"';
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-size: 32px;
+    color: rgba(168, 85, 247, 0.2);
+    font-family: 'Georgia', serif;
+}
+
+/* ============================================================================
+   RESPONSE FOOTER & CITATIONS
+   ============================================================================ */
+
+.response-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(5, 150, 105, 0.1);
+    font-size: 12px;
+    color: #64748b;
+}
+
+.dark .response-footer {
+    border-top-color: rgba(16, 185, 129, 0.15);
+    color: #94a3b8;
+}
+
+.citation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 16px 0;
+    padding: 12px 0;
+}
+
+.citation-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 8px 12px;
+    border-left: 2px solid #10b981;
+    background: rgba(5, 150, 105, 0.04);
+    border-radius: 0 6px 6px 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.dark .citation-item {
+    background: rgba(16, 185, 129, 0.06);
+    border-left-color: #34d399;
+}
+
+.citation-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.citation-content {
+    flex: 1;
+    color: #334155;
+}
+
+.dark .citation-content {
+    color: #cbd5e1;
+}
+
+/* ============================================================================
+   ISLAMIC CONCEPTS - Special Styling
+   ============================================================================ */
+
+.islamic-term {
+    position: relative;
+    font-weight: 600;
+    color: #059669;
+    padding: 2px 4px;
+    border-bottom: 2px solid rgba(5, 150, 105, 0.3);
+    cursor: help;
+    transition: all 0.2s ease;
+}
+
+.dark .islamic-term {
+    color: #34d399;
+    border-bottom-color: rgba(16, 185, 129, 0.3);
+}
+
+.islamic-term:hover {
+    border-bottom-color: #059669;
+}
+
+.dark .islamic-term:hover {
+    border-bottom-color: #34d399;
+}
+
+/* Arabic text styling */
+.arabic-text {
+    font-family: 'Amiri', 'Arabic Typesetting', serif;
+    font-size: 1.1em;
+    line-height: 2;
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    text-align: right;
+    color: #1e293b;
+    padding: 14px 16px;
+    background: rgba(5, 150, 105, 0.04);
+    border-radius: 8px;
+    margin: 12px 0;
+    word-spacing: 2px;
+}
+
+.dark .arabic-text {
+    color: #e2e8f0;
+    background: rgba(16, 185, 129, 0.06);
+}
+
+/* ============================================================================
+   RESPONSE METADATA
+   ============================================================================ */
+
+.response-metadata {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(5, 150, 105, 0.1);
+}
+
+.dark .response-metadata {
+    color: #64748b;
+    border-top-color: rgba(16, 185, 129, 0.15);
+}
+
+.metadata-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: rgba(5, 150, 105, 0.08);
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.dark .metadata-tag {
+    background: rgba(16, 185, 129, 0.12);
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .comparison-card {
+        grid-template-columns: 1fr;
+    }
+
+    .message-response-header {
+        font-size: 12px;
+        padding: 10px 14px;
+    }
+
+    .key-takeaway {
+        padding: 16px 14px;
+    }
+
+    .key-takeaway-content {
+        gap: 8px;
+    }
+}
