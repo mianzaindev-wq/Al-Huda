@@ -24,8 +24,6 @@ echo.
 echo ============================================================
 echo.
 
-:: Open browser after 4-second delay (runs in background while server starts)
-start /b cmd /c "timeout /t 4 /nobreak >nul && start http://127.0.0.1:8000"
 
 :: Always run from project root with the venv Python so package imports resolve
 venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000

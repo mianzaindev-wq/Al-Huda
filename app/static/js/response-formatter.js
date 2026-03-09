@@ -195,6 +195,153 @@ function createResponseMetadata(metadata) {
 }
 
 // ============================================================================
+// ENHANCED RESPONSE BOXES - NEW STRUCTURED FORMATS
+// ============================================================================
+
+/**
+ * Explanation Box - For detailed explanations
+ */
+function createExplanationBox(content) {
+    return `<div class="explanation-box">${formatInlineText(content)}</div>`;
+}
+
+/**
+ * Insight Box - For important insights and profound concepts
+ */
+function createInsightBox(title, content) {
+    return `
+<div class="insight-box">
+    <div class="insight-box-title">
+        <span class="material-symbols-outlined">lightbulb</span>
+        ${escapeHtml(title)}
+    </div>
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Benefit Box - For benefits or wisdom
+ */
+function createBenefitBox(title, content) {
+    return `
+<div class="benefit-box">
+    <div class="benefit-box-title">✨ ${escapeHtml(title)}</div>
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Wisdom Section - For profound quotes or teachings
+ */
+function createWisdomSection(title, text) {
+    return `
+<div class="wisdom-section">
+    <div class="wisdom-title">
+        <span class="material-symbols-outlined">auto_awesome</span>
+        ${escapeHtml(title)}
+    </div>
+    <div class="wisdom-text">${formatInlineText(text)}</div>
+</div>`;
+}
+
+/**
+ * Step Guide - For showing numbered steps
+ */
+function createStepGuide(steps) {
+    const stepsHTML = steps.map((step, index) => `
+<div class="step-item">
+    <div class="step-number">${index + 1}</div>
+    <div class="step-content">
+        <div class="step-title">${escapeHtml(step.title)}</div>
+        <div class="step-description">${formatInlineText(step.description)}</div>
+    </div>
+</div>`).join('\n');
+
+    return `<div class="step-guide">${stepsHTML}</div>`;
+}
+
+/**
+ * Key Points List - For highlighting important points
+ */
+function createKeyPointsList(title, points) {
+    const pointsHTML = points.map(point => `
+<li>
+    <div class="key-points-marker"></div>
+    <div>${formatInlineText(point)}</div>
+</li>`).join('\n');
+
+    return `
+<div class="key-points">
+    <div class="key-points-title">
+        <span class="material-symbols-outlined">check_circle</span>
+        ${escapeHtml(title)}
+    </div>
+    <ul class="key-points-list">
+        ${pointsHTML}
+    </ul>
+</div>`;
+}
+
+/**
+ * Warning Box - For important cautions
+ */
+function createWarningBox(title, content) {
+    return `
+<div class="warning-box">
+    <div class="warning-title">
+        <span class="material-symbols-outlined">warning</span>
+        ${escapeHtml(title)}
+    </div>
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Success Box - For affirmations
+ */
+function createSuccessBox(content) {
+    return `
+<div class="success-box">
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Summary Box - For overall summaries/conclusions
+ */
+function createSummaryBox(title, content) {
+    return `
+<div class="summary-box">
+    <div class="summary-title">
+        <span class="material-symbols-outlined">summarize</span>
+        ${escapeHtml(title)}
+    </div>
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Reference Block - For references or citations
+ */
+function createReferenceBlock(label, content) {
+    return `
+<div class="reference-block">
+    <div class="reference-label">
+        <span class="material-symbols-outlined">reference</span>
+        ${escapeHtml(label)}
+    </div>
+    ${formatInlineText(content)}
+</div>`;
+}
+
+/**
+ * Response Divider - Visual separation
+ */
+function createDivider() {
+    return '<div class="response-divider"></div>';
+}
+
+// ============================================================================
 // EXPORT FUNCTIONS FOR GLOBAL USE
 // ============================================================================
 
