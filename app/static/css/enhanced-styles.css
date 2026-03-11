@@ -1806,3 +1806,77 @@
     font-size: 0.875rem;
     opacity: 0.8;
 }
+
+/* ============================================================================
+   REACT INTRO ANIMATION KEYFRAMES
+   ============================================================================ */
+
+/* Floating particles rising from bottom */
+@keyframes particleRise {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.5);
+    }
+    10% {
+        opacity: 0.8;
+    }
+    80% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) scale(0.2);
+    }
+}
+
+/* Orbiting dots around the moon */
+@keyframes orbit {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Expanding ripple rings */
+@keyframes rippleExpand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 0.6;
+        border-width: 2px;
+    }
+    100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+        border-width: 0.5px;
+    }
+}
+
+/* Pulsing glow behind the moon icon */
+@keyframes glowPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+/* Progress bar fill animation */
+@keyframes progressFill {
+    0% { width: 0%; }
+    20% { width: 25%; }
+    50% { width: 55%; }
+    80% { width: 85%; }
+    100% { width: 100%; }
+}
+
+/* Dark mode for the React intro */
+.dark .react-intro {
+    background: linear-gradient(135deg, #020617 0%, #0c0a09 50%, #1e293b 100%) !important;
+}

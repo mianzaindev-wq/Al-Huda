@@ -9,6 +9,9 @@
     <title>Al Huda - Islamic Knowledge Assistant</title>
     <script src="/static/js/formatter.js" defer></script>
     <script src="/static/js/response-formatter.js" defer></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="/static/js/react-intro.js" defer></script>
     <link rel="stylesheet" href="/static/css/enhanced-styles.css">
     <link rel="stylesheet" href="/static/css/premium-ui.css">
     <link rel="stylesheet" href="/static/css/response-formatting.css">
@@ -1570,63 +1573,9 @@
     <div id="toast" class="toast"></div>
 
     <!-- ========================================
-         LAUNCH ANIMATION OVERLAY - ENHANCED
+         REACT-POWERED INTRO ANIMATION
          ======================================== -->
-    <div id="launchOverlay" class="launch-overlay">
-        <!-- SVG Gradient Definitions -->
-        <svg width="0" height="0" style="position: absolute;">
-            <defs>
-                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
-                    <stop offset="50%" style="stop-color:#10b981;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#34d399;stop-opacity:1" />
-                </linearGradient>
-            </defs>
-        </svg>
-
-        <div class="launch-moon-container">
-            <!-- Outer rotating ring with dots -->
-            <div class="launch-ring-outer"></div>
-
-            <!-- SVG Ring - Main traversing outline -->
-            <div class="launch-ring">
-                <svg viewBox="0 0 280 280">
-                    <circle class="ring-bg" cx="140" cy="140" r="135" />
-                    <circle class="ring-progress" cx="140" cy="140" r="135" />
-                </svg>
-            </div>
-
-            <!-- Inner ring - reverse direction -->
-            <div class="launch-ring-inner">
-                <svg viewBox="0 0 240 240">
-                    <circle class="ring-progress" cx="120" cy="120" r="115" />
-                </svg>
-            </div>
-
-            <!-- Glow layers -->
-            <div class="launch-glow-layer launch-glow-3"></div>
-            <div class="launch-glow-layer launch-glow-2"></div>
-            <div class="launch-glow-layer launch-glow-1"></div>
-
-            <!-- Particles -->
-            <div class="launch-particle"></div>
-            <div class="launch-particle"></div>
-            <div class="launch-particle"></div>
-            <div class="launch-particle"></div>
-            <div class="launch-particle"></div>
-            <div class="launch-particle"></div>
-
-            <!-- Moon icon - BIGGER -->
-            <span class="material-symbols-outlined launch-moon"
-                style="font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 48;">dark_mode</span>
-        </div>
-
-        <!-- Brand text - positioned below the moon -->
-        <div class="launch-brand">
-            <div class="launch-brand-title">Al Huda</div>
-            <div class="launch-brand-subtitle">Islamic Knowledge</div>
-        </div>
-    </div>
+    <div id="reactIntroRoot"></div>
 
     <!-- ========================================
          SEARCH MODAL
@@ -2809,67 +2758,17 @@
         // LAUNCH ANIMATION
         // ========================================
         function initLaunchAnimation() {
-            const overlay = document.getElementById('launchOverlay');
-            const animationEnabled = localStorage.getItem('launchAnimation') !== 'false';
-
             // Play TTS greeting immediately when animation starts
             playTTSGreeting();
 
-            if (!animationEnabled || !overlay) {
-                // Skip animation
-                if (overlay) overlay.classList.add('hidden');
+            // Delegate to React-powered intro animation
+            if (typeof mountReactIntro === 'function') {
+                mountReactIntro();
+            } else {
+                // Fallback if React didn't load
                 document.body.style.opacity = '1';
-                document.body.classList.add('fonts-loaded'); // Show icons immediately
-                return;
+                document.body.classList.add('fonts-loaded');
             }
-
-            // Show animation container but wait for fonts before showing icons
-            document.body.style.opacity = '1';
-
-            // Wait for Material Icons font to load before showing moon icon
-            // This prevents the "dark_mode" text from flashing
-            const checkFontsAndStart = () => {
-                document.fonts.ready.then(() => {
-                    // Check if Material Symbols font is loaded
-                    const fontLoaded = document.fonts.check('1em "Material Symbols Outlined"');
-                    if (fontLoaded) {
-                        // Fonts loaded - add class to show icons smoothly
-                        requestAnimationFrame(() => {
-                            document.body.classList.add('fonts-loaded');
-                        });
-                    } else {
-                        // Font not loaded yet, add class anyway after a short delay
-                        // This is a fallback in case font detection isn't working
-                        setTimeout(() => {
-                            document.body.classList.add('fonts-loaded');
-                        }, 100);
-                    }
-                }).catch(() => {
-                    // Fallback if font detection fails
-                    document.body.classList.add('fonts-loaded');
-                });
-            };
-
-            // Start font check immediately
-            checkFontsAndStart();
-
-            // Also add a fallback timeout in case fonts.ready doesn't fire correctly
-            setTimeout(() => {
-                if (!document.body.classList.contains('fonts-loaded')) {
-                    document.body.classList.add('fonts-loaded');
-                }
-            }, 300);
-
-            // Wait for enhanced animation to complete (extended duration)
-            setTimeout(() => {
-                overlay.classList.add('hidden');
-
-                // Add reveal animations to welcome screen elements with stagger
-                const welcomeElements = document.querySelectorAll('#welcomeScreen > *');
-                welcomeElements.forEach((el, index) => {
-                    el.classList.add('content-reveal', `reveal-delay-${Math.min(index + 1, 5)}`);
-                });
-            }, 4500);  // Extended for more dramatic effect
         }
 
         // ========================================
@@ -3793,7 +3692,7 @@
 
         // Continue conversation from where it left off - APPEND to existing message
         async function continueConversation() {
-            const continueMessage = "Please continue from where you left off seamlessly. Do not repeat anything already said.";
+            const continueMessage = "Please continue from where you left off seamlessly. Do not repeat anything already said. Do not start with markdown headings (##) or formatting markers — just continue the text naturally.";
 
             // Use the appropriate input based on current screen
             const isFromWelcome = welcomeScreen.classList.contains('flex');

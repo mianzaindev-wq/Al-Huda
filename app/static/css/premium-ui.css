@@ -965,12 +965,15 @@ input:focus-visible {
    ENHANCED CHAT MESSAGE ANIMATIONS — Staggered slide-up
    ============================================================================ */
 
+/* Chat messages appear smoothly — animation only plays on initial DOM insertion */
 .chat-message {
-    animation: msgAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: msgAppear 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.chat-message:nth-last-child(1) { animation-delay: 0s; }
-.chat-message:nth-last-child(2) { animation-delay: 0.05s; }
+/* Only animate the newest message, not older ones */
+.chat-message:not(:last-child) {
+    animation: none;
+}
 
 @keyframes msgAppear {
     from {
@@ -1086,25 +1089,7 @@ input:focus-visible {
         0 0 20px rgba(16, 185, 129, 0.08);
 }
 
-/* ============================================================================
-   QURAN/HADITH BOX ENTRANCE ANIMATION
-   ============================================================================ */
-
-.quran-verse,
-.hadith-box {
-    animation: boxReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes boxReveal {
-    from {
-        opacity: 0;
-        transform: translateY(12px) scale(0.97);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
+/* Quran/Hadith boxes — NO entrance animation (they flash during streaming re-renders) */
 
 /* ============================================================================
    HEADER GRADIENT BORDER ACCENT
