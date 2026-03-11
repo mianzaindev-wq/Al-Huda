@@ -85,6 +85,14 @@ async def call_mistral_api(messages: List[Dict]) -> str:
             raise Exception("API quota exceeded. Please try again in a moment.")
         if "timeout" in err_str:
             raise Exception("Request timed out. Please try again.")
+        if any(keyword in err_str for keyword in (
+            "getaddrinfo", "connect", "connection refused",
+            "network", "unreachable", "name resolution",
+        )):
+            raise Exception(
+                "Unable to connect to the AI service. "
+                "Please check your internet connection and try again."
+            )
         raise Exception(f"API error: {exc}")
 
 

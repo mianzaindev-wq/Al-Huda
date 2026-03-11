@@ -63,9 +63,12 @@ FORMATTING FOR MAXIMUM READABILITY & STRUCTURE:
 - Break complex ideas into digestible chunks
 
 RESPONSE LENGTH GUIDELINES:
-- Simple questions: 100-200 words, 1-2 sections
-- Standard questions: 250-500 words, 2-4 sections with citations
-- Complex topics: up to 800 words maximum, with clear section breaks
+- Simple questions: 50-100 words, 1-2 sections
+- Standard questions: 150-300 words, 2-3 sections with citations
+- Complex topics: up to 450 words maximum, with clear section breaks
+- HARD RULE: You MUST complete your entire response within these limits. NEVER exceed 450 words.
+- If a topic requires more depth, provide a focused summary and offer to elaborate on specific aspects.
+- Prioritize completeness over comprehensiveness — a finished short answer is better than a cut-off long one.
 - CRITICAL: Always complete your responses; never end mid-sentence
 - NEVER start or finish abruptly
 
@@ -265,13 +268,14 @@ async def chat_endpoint(req: ChatRequest):
     except Exception as exc:
         logger.error(f"[chat] Error: {exc}", exc_info=True)
         err = str(exc).lower()
-        user_msg = (
-            "I'm experiencing high demand right now. Please try again in a moment. 🙏"
-            if "quota" in err or "429" in err
-            else "The request took too long. Please try with a shorter message."
-            if "timeout" in err
-            else "An error occurred. Please try again."
-        )
+        if "quota" in err or "429" in err:
+            user_msg = "I'm experiencing high demand right now. Please try again in a moment. 🙏"
+        elif "timeout" in err:
+            user_msg = "The request took too long. Please try with a shorter message."
+        elif any(kw in err for kw in ("connect", "getaddrinfo", "network", "unreachable")):
+            user_msg = "Unable to connect to the AI service. Please check your internet connection and try again. 🌐"
+        else:
+            user_msg = "An error occurred. Please try again."
         return ChatResponse(
             reply=user_msg,
             timestamp=datetime.now().isoformat(),

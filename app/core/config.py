@@ -44,9 +44,9 @@ VECTOR_DB_PATH: str = str(_PROJECT_ROOT / "vector_db.pkl")
 MISTRAL_MODEL: str = "mistral-large-latest"
 
 GENERATION_CONFIG: dict = {
-    "temperature": 0.7,
-    "max_tokens": 4096,
-    "top_p": 0.95,
+    "temperature": float(os.getenv("TEMPERATURE", "0.7")),
+    "max_tokens": int(os.getenv("MAX_TOKENS", "1024")),
+    "top_p": float(os.getenv("TOP_P", "0.95")),
 }
 
 # ---------------------------------------------------------------------------
