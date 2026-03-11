@@ -1,302 +1,362 @@
 /**
- * Al-Huda — React-Powered Intro Animation
- * A premium, animated launch screen with particle effects and smooth transitions.
+ * Al-Huda — Premium React Intro Animation
+ * Islamic-themed launch screen with starfield, geometric patterns,
+ * light rays, and smooth phase transitions.
  */
-const { useState, useEffect, useRef, createElement: h } = React;
+const { useState, useEffect, useRef, useMemo, createElement: h } = React;
 
-// ─────────────────────────────────────────────────────────
-// Floating Particle Component
-// ─────────────────────────────────────────────────────────
-function Particle({ delay, size, x, duration, color }) {
+// ─────────────────────────────────────────────
+// Starfield — twinkling stars in the background
+// ─────────────────────────────────────────────
+function Starfield({ count }) {
+    const stars = useMemo(() =>
+        Array.from({ length: count }, (_, i) => ({
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            size: 1 + Math.random() * 2.5,
+            delay: Math.random() * 4,
+            duration: 2 + Math.random() * 3,
+            brightness: 0.3 + Math.random() * 0.7,
+        })), [count]);
+
+    return h('div', { style: { position: 'absolute', inset: 0, overflow: 'hidden' } },
+        stars.map((s, i) => h('div', {
+            key: i,
+            style: {
+                position: 'absolute',
+                left: s.x + '%',
+                top: s.y + '%',
+                width: s.size,
+                height: s.size,
+                borderRadius: '50%',
+                background: `rgba(255, 255, 255, ${s.brightness * 0.8})`,
+                boxShadow: `0 0 ${s.size * 3}px rgba(16, 185, 129, ${s.brightness * 0.4})`,
+                animation: `starTwinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+            },
+        }))
+    );
+}
+
+// ─────────────────────────────────────────────────
+// Islamic Geometric Pattern — rotating octagon ring
+// ─────────────────────────────────────────────────
+function GeometricRing({ size, duration, reverse, opacity, borderStyle }) {
+    // Create an octagonal shape using clip-path
     const style = {
         position: 'absolute',
         width: size,
         height: size,
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        border: borderStyle || '1.5px solid rgba(16, 185, 129, 0.2)',
         borderRadius: '50%',
-        background: color || 'rgba(16, 185, 129, 0.6)',
-        left: x + '%',
-        bottom: '-10px',
-        animation: `particleRise ${duration}s ease-out ${delay}s infinite`,
-        opacity: 0,
-        filter: 'blur(0.5px)',
-        boxShadow: `0 0 ${size * 2}px ${color || 'rgba(16, 185, 129, 0.3)'}`,
+        animation: `orbit ${duration}s linear infinite ${reverse ? 'reverse' : ''}`,
+        opacity: opacity || 0.3,
     };
     return h('div', { style });
 }
 
-// ─────────────────────────────────────────────────────────
-// Orbit Ring — a rotating container with dots placed around it
-// ─────────────────────────────────────────────────────────
-function OrbitRing({ count, radius, duration, reverse, dotSize }) {
-    const containerStyle = {
-        position: 'absolute',
-        width: radius * 2,
-        height: radius * 2,
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        animation: `orbit ${duration}s linear infinite ${reverse ? 'reverse' : ''}`,
-    };
+// ────────────────────────────────────────
+// Light Ray — radiating beams from center
+// ────────────────────────────────────────
+function LightRays({ visible }) {
+    const rays = useMemo(() =>
+        Array.from({ length: 12 }, (_, i) => ({
+            angle: (360 / 12) * i,
+            width: 1 + (i % 3) * 0.5,
+            length: 120 + (i % 4) * 40,
+            delay: i * 0.08,
+            opacity: 0.08 + (i % 3) * 0.04,
+        })), []);
 
-    const dots = Array.from({ length: count }, (_, i) => {
-        const angle = (360 / count) * i;
-        const rad = (angle * Math.PI) / 180;
-        const x = radius + Math.cos(rad) * radius - (dotSize || 5) / 2;
-        const y = radius + Math.sin(rad) * radius - (dotSize || 5) / 2;
-        return h('div', {
+    return h('div', {
+        style: {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: 0,
+            height: 0,
+            opacity: visible ? 1 : 0,
+            transition: 'opacity 1.2s ease-out 0.5s',
+        }
+    },
+        rays.map((r, i) => h('div', {
             key: i,
             style: {
                 position: 'absolute',
-                width: dotSize || 5,
-                height: dotSize || 5,
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #059669, #34d399)',
-                boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)',
-                left: x,
-                top: y,
-                opacity: 0.7 + (i % 3) * 0.1,
+                width: r.width,
+                height: r.length,
+                background: `linear-gradient(to bottom, rgba(16, 185, 129, ${r.opacity}), transparent)`,
+                transformOrigin: '50% 0%',
+                transform: `rotate(${r.angle}deg)`,
+                opacity: visible ? 1 : 0,
+                transition: `opacity 0.6s ease ${r.delay}s, height 0.8s ease ${r.delay}s`,
             },
-        });
-    });
-
-    return h('div', { style: containerStyle }, ...dots);
+        }))
+    );
 }
 
-// ─────────────────────────────────────────────────────────
-// Ripple Ring Component
-// ─────────────────────────────────────────────────────────
-function RippleRing({ delay, maxSize }) {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        width: 0,
-        height: 0,
-        borderRadius: '50%',
-        border: '2px solid rgba(16, 185, 129, 0.3)',
-        transform: 'translate(-50%, -50%)',
-        animation: `rippleExpand 3s ease-out ${delay}s infinite`,
-        opacity: 0,
-    };
-    return h('div', { style, 'data-max': maxSize });
+// ────────────────────────────────────────────────
+// Floating Motes — warm golden particles drifting
+// ────────────────────────────────────────────────
+function FloatingMotes({ count, visible }) {
+    const motes = useMemo(() =>
+        Array.from({ length: count }, (_, i) => ({
+            x: 10 + Math.random() * 80,
+            delay: Math.random() * 5,
+            size: 2 + Math.random() * 4,
+            duration: 5 + Math.random() * 7,
+            drift: -30 + Math.random() * 60,
+            color: i % 3 === 0
+                ? 'rgba(217, 171, 95, 0.5)'   // Gold
+                : i % 3 === 1
+                    ? 'rgba(16, 185, 129, 0.4)'  // Emerald
+                    : 'rgba(52, 211, 153, 0.35)', // Teal
+        })), [count]);
+
+    return h('div', {
+        style: {
+            position: 'absolute', inset: 0, overflow: 'hidden',
+            opacity: visible ? 1 : 0,
+            transition: 'opacity 1s ease 0.3s',
+        }
+    },
+        motes.map((m, i) => h('div', {
+            key: i,
+            style: {
+                position: 'absolute',
+                left: m.x + '%',
+                bottom: '-5%',
+                width: m.size,
+                height: m.size,
+                borderRadius: '50%',
+                background: m.color,
+                boxShadow: `0 0 ${m.size * 3}px ${m.color}`,
+                animation: `moteRise ${m.duration}s ease-out ${m.delay}s infinite`,
+            },
+        }))
+    );
 }
 
-// ─────────────────────────────────────────────────────────
-// Main Intro Animation Component
-// ─────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────
+// Pulsing Halo — concentric expanding rings
+// ───────────────────────────────────────────────
+function PulsingHalos({ visible }) {
+    const halos = [
+        { delay: 0, color: 'rgba(5, 150, 105, 0.25)' },
+        { delay: 1.2, color: 'rgba(16, 185, 129, 0.18)' },
+        { delay: 2.4, color: 'rgba(52, 211, 153, 0.12)' },
+    ];
+
+    return h('div', { style: { position: 'absolute', top: '50%', left: '50%' } },
+        halos.map((halo, i) => h('div', {
+            key: i,
+            style: {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                transform: 'translate(-50%, -50%)',
+                borderRadius: '50%',
+                border: `1.5px solid ${halo.color}`,
+                animation: visible ? `haloExpand 3.6s ease-out ${halo.delay}s infinite` : 'none',
+                opacity: visible ? 1 : 0,
+            },
+        }))
+    );
+}
+
+// ═══════════════════════════════════════════════
+// MAIN INTRO COMPONENT
+// ═══════════════════════════════════════════════
 function IntroAnimation({ onComplete }) {
-    const [phase, setPhase] = useState('entering');  // entering → showing → exiting → done
+    const [phase, setPhase] = useState('entering');  // entering → reveal → radiate → exiting → done
     const [fontsReady, setFontsReady] = useState(false);
-    const containerRef = useRef(null);
 
     // Font loading
     useEffect(() => {
-        const checkFonts = async () => {
+        const load = async () => {
             try {
                 await document.fonts.ready;
-                const loaded = document.fonts.check('1em "Material Symbols Outlined"');
                 setFontsReady(true);
                 document.body.classList.add('fonts-loaded');
-                if (!loaded) {
-                    setTimeout(() => document.body.classList.add('fonts-loaded'), 100);
-                }
-            } catch {
-                setFontsReady(true);
-                document.body.classList.add('fonts-loaded');
-            }
+            } catch { setFontsReady(true); document.body.classList.add('fonts-loaded'); }
         };
-        checkFonts();
-        setTimeout(() => setFontsReady(true), 500);
+        load();
+        setTimeout(() => { setFontsReady(true); document.body.classList.add('fonts-loaded'); }, 500);
     }, []);
 
-    // Phase transitions
+    // Phase timeline
     useEffect(() => {
         document.body.style.opacity = '1';
-
-        const showTimer = setTimeout(() => setPhase('showing'), 300);
-        const exitTimer = setTimeout(() => setPhase('exiting'), 3800);
-        const doneTimer = setTimeout(() => {
-            setPhase('done');
-            if (onComplete) onComplete();
-        }, 4500);
-
-        return () => {
-            clearTimeout(showTimer);
-            clearTimeout(exitTimer);
-            clearTimeout(doneTimer);
-        };
+        const t1 = setTimeout(() => setPhase('reveal'), 400);
+        const t2 = setTimeout(() => setPhase('radiate'), 1600);
+        const t3 = setTimeout(() => setPhase('exiting'), 4000);
+        const t4 = setTimeout(() => { setPhase('done'); if (onComplete) onComplete(); }, 4800);
+        return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); };
     }, []);
 
     if (phase === 'done') return null;
 
-    // Generate particles
-    const particles = Array.from({ length: 20 }, (_, i) => ({
-        delay: Math.random() * 3,
-        size: 3 + Math.random() * 5,
-        x: 5 + Math.random() * 90,
-        duration: 3 + Math.random() * 4,
-        color: i % 3 === 0
-            ? 'rgba(5, 150, 105, 0.5)'
-            : i % 3 === 1
-                ? 'rgba(52, 211, 153, 0.4)'
-                : 'rgba(16, 185, 129, 0.6)',
-    }));
+    const isRevealed = phase === 'reveal' || phase === 'radiate' || phase === 'exiting';
+    const isRadiating = phase === 'radiate' || phase === 'exiting';
+    const isExiting = phase === 'exiting';
 
+    // ── Overlay ──
     const overlayStyle = {
-        position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
+        position: 'fixed', inset: 0, zIndex: 9999,
+        display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
         overflow: 'hidden',
-        opacity: phase === 'exiting' ? 0 : 1,
-        visibility: phase === 'exiting' ? 'hidden' : 'visible',
-        transition: 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.7s ease',
-        background: 'linear-gradient(135deg, #fafaf9 0%, #f1f5f9 50%, #e2e8f0 100%)',
+        background: 'linear-gradient(160deg, #021a0f 0%, #03120b 40%, #0a1628 100%)',
+        opacity: isExiting ? 0 : 1,
+        transition: 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+        fontFamily: "'Inter', sans-serif",
     };
 
-    const centerContainerStyle = {
+    // ── Center container ──
+    const centerStyle = {
         position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 320,
-        height: 320,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 340, height: 340,
     };
 
-    // Pulsing glow behind moon
+    // ── Glow behind moon ──
     const glowStyle = {
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(5, 150, 105, 0.15) 0%, transparent 70%)',
-        animation: 'glowPulse 2.5s ease-in-out infinite',
-        transform: phase !== 'entering' ? 'scale(1)' : 'scale(0.5)',
-        opacity: phase !== 'entering' ? 1 : 0,
-        transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+        position: 'absolute', width: '100%', height: '100%', borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.08) 40%, transparent 70%)',
+        transform: isRevealed ? 'scale(1.2)' : 'scale(0.3)',
+        opacity: isRevealed ? 1 : 0,
+        transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)',
+        filter: 'blur(8px)',
     };
 
-    // Moon icon
+    // ── Moon icon ──
     const moonStyle = {
-        fontSize: 140,
-        color: fontsReady ? '#059669' : 'transparent',
-        transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-        transform: phase !== 'entering' ? 'scale(1) rotate(0deg)' : 'scale(0.3) rotate(-40deg)',
-        opacity: phase !== 'entering' ? 1 : 0,
-        filter: phase === 'showing' ? 'drop-shadow(0 0 30px rgba(5, 150, 105, 0.4))' : 'none',
+        fontSize: 130,
+        color: fontsReady ? '#10b981' : 'transparent',
+        transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: isRevealed ? 'scale(1) rotate(0deg)' : 'scale(0.2) rotate(-60deg)',
+        opacity: isRevealed ? 1 : 0,
+        filter: isRadiating
+            ? 'drop-shadow(0 0 40px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 80px rgba(5, 150, 105, 0.3))'
+            : 'none',
         fontVariationSettings: "'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 48",
+        zIndex: 10, position: 'relative',
+    };
+
+    // ── Bismillah text ──
+    const bismillahStyle = {
+        fontFamily: "'Amiri', serif",
+        fontSize: 28,
+        color: 'rgba(217, 171, 95, 0.85)',
+        letterSpacing: '0.04em',
+        marginTop: 20,
+        opacity: isRadiating ? 1 : 0,
+        transform: isRadiating ? 'translateY(0) scale(1)' : 'translateY(12px) scale(0.9)',
+        transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s',
+        textShadow: '0 0 20px rgba(217, 171, 95, 0.3)',
         zIndex: 10,
-        position: 'relative',
+        direction: 'rtl',
     };
 
-    // Brand text
+    // ── Title ──
     const titleStyle = {
-        fontSize: 38,
-        fontWeight: 800,
-        background: 'linear-gradient(135deg, #059669, #10b981, #34d399)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
+        fontSize: 42, fontWeight: 800,
+        background: 'linear-gradient(135deg, #10b981, #34d399, #d9ab5f)',
+        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
         letterSpacing: '-0.02em',
-        marginTop: 28,
-        opacity: phase === 'showing' ? 1 : 0,
-        transform: phase === 'showing' ? 'translateY(0)' : 'translateY(15px)',
-        transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s',
+        marginTop: 14,
+        opacity: isRadiating ? 1 : 0,
+        transform: isRadiating ? 'translateY(0)' : 'translateY(18px)',
+        transition: 'all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s',
+        zIndex: 10,
     };
 
+    // ── Subtitle ──
     const subtitleStyle = {
-        fontSize: 16,
-        fontWeight: 500,
-        color: '#64748b',
-        letterSpacing: '0.15em',
-        textTransform: 'uppercase',
+        fontSize: 14, fontWeight: 500,
+        color: 'rgba(167, 243, 208, 0.6)',
+        letterSpacing: '0.25em', textTransform: 'uppercase',
         marginTop: 8,
-        opacity: phase === 'showing' ? 1 : 0,
-        transform: phase === 'showing' ? 'translateY(0)' : 'translateY(10px)',
-        transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
+        opacity: isRadiating ? 1 : 0,
+        transform: isRadiating ? 'translateY(0)' : 'translateY(12px)',
+        transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s',
+        zIndex: 10,
     };
 
-    // Progress bar
+    // ── Progress bar ──
     const progressTrackStyle = {
-        width: 200,
-        height: 3,
-        borderRadius: 4,
-        background: 'rgba(5, 150, 105, 0.1)',
-        marginTop: 32,
-        overflow: 'hidden',
-        opacity: phase === 'showing' ? 1 : 0,
-        transition: 'opacity 0.3s ease 0.6s',
+        width: 180, height: 2, borderRadius: 4,
+        background: 'rgba(16, 185, 129, 0.12)',
+        marginTop: 36, overflow: 'hidden',
+        opacity: isRadiating ? 1 : 0,
+        transition: 'opacity 0.4s ease 0.6s', zIndex: 10,
     };
-
     const progressBarStyle = {
-        height: '100%',
-        borderRadius: 4,
-        background: 'linear-gradient(90deg, #059669, #10b981, #34d399)',
-        animation: 'progressFill 3.5s ease-out 0.5s forwards',
+        height: '100%', borderRadius: 4,
+        background: 'linear-gradient(90deg, #059669, #10b981, #d9ab5f)',
+        animation: 'progressFill 3s ease-out 0.8s forwards',
         width: 0,
     };
 
-    return h('div', { ref: containerRef, style: overlayStyle, className: 'react-intro' },
-        // Background radial gradients
-        h('div', {
-            style: {
-                position: 'absolute', inset: 0,
-                backgroundImage: `
-                    radial-gradient(circle at 20% 30%, rgba(5, 150, 105, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 70%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.04) 0%, transparent 70%)
-                `,
-                animation: 'bgPulse 4s ease-in-out infinite',
-            }
-        }),
+    return h('div', { style: overlayStyle, className: 'react-intro' },
 
-        // Particles
-        h('div', { style: { position: 'absolute', inset: 0, overflow: 'hidden' } },
-            particles.map((p, i) => h(Particle, { key: i, ...p }))
-        ),
+        // ── Starfield Background ──
+        h(Starfield, { count: 60 }),
 
-        // Center container with orbiting dots and moon
-        h('div', { style: centerContainerStyle },
+        // ── Floating Motes ──
+        h(FloatingMotes, { count: 25, visible: isRevealed }),
+
+        // ── Center Assembly ──
+        h('div', { style: centerStyle },
+
             // Glow
             h('div', { style: glowStyle }),
 
-            // Outer orbit ring (8 dots)
-            h(OrbitRing, { count: 8, radius: 140, duration: 12, dotSize: 5 }),
+            // Geometric rings (Islamic-inspired rotating patterns)
+            h(GeometricRing, {
+                size: 300, duration: 25, opacity: isRevealed ? 0.15 : 0,
+                borderStyle: '1px solid rgba(16, 185, 129, 0.15)',
+            }),
+            h(GeometricRing, {
+                size: 260, duration: 18, reverse: true, opacity: isRevealed ? 0.12 : 0,
+                borderStyle: '1px dashed rgba(217, 171, 95, 0.12)',
+            }),
+            h(GeometricRing, {
+                size: 220, duration: 30, opacity: isRevealed ? 0.1 : 0,
+                borderStyle: '1px solid rgba(52, 211, 153, 0.1)',
+            }),
 
-            // Inner orbit ring (6 dots, reverse)
-            h(OrbitRing, { count: 6, radius: 105, duration: 8, reverse: true, dotSize: 4 }),
+            // Light rays
+            h(LightRays, { visible: isRadiating }),
 
-            // Ripple rings
-            h(RippleRing, { delay: 0, maxSize: 300 }),
-            h(RippleRing, { delay: 1, maxSize: 300 }),
-            h(RippleRing, { delay: 2, maxSize: 300 }),
+            // Pulsing halos
+            h(PulsingHalos, { visible: isRadiating }),
 
             // Moon icon
             h('span', {
                 className: 'material-symbols-outlined',
                 style: moonStyle,
-            }, 'dark_mode')
+            }, 'dark_mode'),
         ),
 
-        // Brand text
+        // ── Text & Branding ──
         h('div', { style: { textAlign: 'center', position: 'relative', zIndex: 10 } },
+            h('div', { style: bismillahStyle }, 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'),
             h('div', { style: titleStyle }, 'Al Huda'),
-            h('div', { style: subtitleStyle }, 'Islamic Knowledge'),
+            h('div', { style: subtitleStyle }, 'Islamic Knowledge Assistant'),
         ),
 
-        // Progress bar
+        // ── Progress Bar ──
         h('div', { style: progressTrackStyle },
             h('div', { style: progressBarStyle })
         )
     );
 }
 
-// ─────────────────────────────────────────────────────────
-// Mount the React intro
-// ─────────────────────────────────────────────────────────
+// ─────────────────────────────
+// Mount
+// ─────────────────────────────
 function mountReactIntro() {
     const container = document.getElementById('reactIntroRoot');
     if (!container) return;
@@ -311,16 +371,13 @@ function mountReactIntro() {
     const root = ReactDOM.createRoot(container);
     root.render(h(IntroAnimation, {
         onComplete: () => {
-            // Reveal welcome screen elements with stagger
             const welcomeElements = document.querySelectorAll('#welcomeScreen > *');
             welcomeElements.forEach((el, index) => {
                 el.classList.add('content-reveal', 'reveal-delay-' + Math.min(index + 1, 5));
             });
-            // Clean up React mount after animation
             setTimeout(() => root.unmount(), 100);
         }
     }));
 }
 
-// Export
 window.mountReactIntro = mountReactIntro;
