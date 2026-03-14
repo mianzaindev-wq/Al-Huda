@@ -270,14 +270,24 @@ async def chat_endpoint(req: ChatRequest):
     except Exception as exc:
         logger.error(f"[chat] Error: {exc}", exc_info=True)
         err = str(exc).lower()
-        if "quota" in err or "429" in err:
-            user_msg = "I'm experiencing high demand right now. Please try again in a moment. 🙏"
-        elif "timeout" in err:
-            user_msg = "The request took too long. Please try with a shorter message."
-        elif any(kw in err for kw in ("connect", "getaddrinfo", "network", "unreachable")):
-            user_msg = "Unable to connect to the AI service. Please check your internet connection and try again. 🌐"
+        if "401" in err or "unauthorized" in err or "invalid api key" in err:
+            user_msg = "⚠️ AI service authentication failed. The API key may be invalid or expired."
+        elif "403" in err or "forbidden" in err:
+            user_msg = "🚫 Access denied by the AI service. Your API key may not have permission for this model."
+        elif "quota" in err or "429" in err or "rate limit" in err or "too many" in err:
+            user_msg = "⏳ The AI service is experiencing high demand. Please wait a moment and try again. 🙏"
+        elif "timeout" in err or "timed out" in err:
+            user_msg = "⏱️ The request took too long. Please try with a shorter message."
+        elif any(kw in err for kw in ("connect", "getaddrinfo", "network", "unreachable", "dns", "ssl")):
+            user_msg = "🌐 Unable to connect to the AI service. Please check your internet connection and try again."
+        elif "model" in err and ("not found" in err or "does not exist" in err):
+            user_msg = "🔧 The configured AI model is unavailable. Please contact the administrator."
+        elif "empty response" in err:
+            user_msg = "The AI returned an empty response. Please try rephrasing your question."
+        elif "content" in err and ("filter" in err or "blocked" in err or "safety" in err):
+            user_msg = "🛡️ Your message was blocked by content safety filters. Please rephrase your question."
         else:
-            user_msg = "An error occurred. Please try again."
+            user_msg = f"An error occurred ({type(exc).__name__}). Please try again."
         return ChatResponse(
             reply=user_msg,
             timestamp=datetime.now().isoformat(),
