@@ -81,19 +81,32 @@ async def call_mistral_api(messages: List[Dict]) -> str:
     except Exception as exc:
         logger.error(f"Mistral API error: {exc}")
         err_str = str(exc).lower()
-        if "429" in err_str or "quota" in err_str or "rate limit" in err_str:
-            raise Exception("API quota exceeded. Please try again in a moment.")
-        if "timeout" in err_str:
-            raise Exception("Request timed out. Please try again.")
+        exc_type = type(exc).__name__
+
+        if "429" in err_str or "quota" in err_str or "rate limit" in err_str or "too many" in err_str:
+            raise Exception("API quota exceeded — rate limit reached. Please try again in a moment.")
+        if "401" in err_str or "unauthorized" in err_str or "invalid api key" in err_str:
+            raise Exception("401 Unauthorized — the Mistral API key is invalid or expired.")
+        if "403" in err_str or "forbidden" in err_str:
+            raise Exception("403 Forbidden — API key lacks permission for this model.")
+        if "timeout" in err_str or "timed out" in err_str:
+            raise Exception("Request timed out while waiting for AI response.")
         if any(keyword in err_str for keyword in (
             "getaddrinfo", "connect", "connection refused",
             "network", "unreachable", "name resolution",
+            "dns", "ssl", "certificate",
         )):
             raise Exception(
                 "Unable to connect to the AI service. "
                 "Please check your internet connection and try again."
             )
-        raise Exception(f"API error: {exc}")
+        if "model" in err_str and ("not found" in err_str or "does not exist" in err_str):
+            raise Exception(
+                f"Model not found — the configured model '{MISTRAL_MODEL}' is unavailable."
+            )
+        if "content" in err_str and ("filter" in err_str or "blocked" in err_str or "safety" in err_str):
+            raise Exception("Content blocked by safety filters. Please rephrase your question.")
+        raise Exception(f"API error ({exc_type}): {exc}")
 
 
 # ---------------------------------------------------------------------------

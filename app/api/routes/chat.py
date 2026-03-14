@@ -344,7 +344,33 @@ async def chat_stream_endpoint(req: ChatRequest):
 
         except Exception as exc:
             logger.error(f"[chat-stream] Error: {exc}", exc_info=True)
-            err_payload = {"type": "error", "message": "I apologize, but I encountered an error. Please try again."}
+            err = str(exc).lower()
+
+            # Classify the error for a precise user-facing message
+            if "401" in err or "unauthorized" in err or "invalid api key" in err:
+                error_msg = "⚠️ AI service authentication failed. The API key may be invalid or expired. Please contact the administrator."
+            elif "403" in err or "forbidden" in err:
+                error_msg = "🚫 Access denied by the AI service. Your API key may not have permission for this model."
+            elif "429" in err or "quota" in err or "rate limit" in err or "too many" in err:
+                error_msg = "⏳ The AI service is experiencing high demand. Please wait a moment and try again."
+            elif "timeout" in err or "timed out" in err:
+                error_msg = "⏱️ The request took too long to process. Try asking a shorter or simpler question."
+            elif any(kw in err for kw in ("getaddrinfo", "connect", "connection refused",
+                                           "network", "unreachable", "name resolution",
+                                           "dns", "ssl", "certificate")):
+                error_msg = "🌐 Unable to reach the AI service. Please check your internet connection and try again."
+            elif "model" in err and ("not found" in err or "does not exist" in err):
+                error_msg = "🔧 The configured AI model is unavailable. Please contact the administrator."
+            elif "empty response" in err:
+                error_msg = "The AI returned an empty response. Please try rephrasing your question."
+            elif "content" in err and ("filter" in err or "blocked" in err or "safety" in err):
+                error_msg = "🛡️ Your message could not be processed due to content safety filters. Please rephrase your question."
+            elif "validation" in err or "invalid" in err:
+                error_msg = "❌ There was an issue with the request format. Please try again with a different message."
+            else:
+                error_msg = f"An unexpected error occurred: {type(exc).__name__}. Please try again."
+
+            err_payload = {"type": "error", "message": error_msg}
             yield f"data: {json.dumps(err_payload)}\n\n"
 
     return StreamingResponse(
